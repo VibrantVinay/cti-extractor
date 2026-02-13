@@ -8,7 +8,7 @@ st.set_page_config(page_title="CTI Extractor", layout="wide")
 # Load the model once and cache it
 @st.cache_resource
 def load_extractor():
-    return CTIExtractor(model_path="cisco-ai/SecureBERT2.0-NER")
+    return CTIExtractor(model_path="CyberPeace-Institute/SecureBERT-NER")
 
 extractor = load_extractor()
 
