@@ -1,0 +1,6 @@
+transformers==4.38.2
+datasets==2.18.0
+torch==2.2.1
+streamlit==1.32.0
+accelerate==0.27.2
+seqeval==1.2.2
