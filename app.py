@@ -8,8 +8,7 @@ st.set_page_config(page_title="CTI Extractor", layout="wide")
 # Load the model once and cache it
 @st.cache_resource
 def load_extractor():
-    # If testing without training, use: return CTIExtractor(model_path="cisco-ai/SecureBERT2.0-NER")
-    return CTIExtractor()
+    return CTIExtractor(model_path="cisco-ai/SecureBERT2.0-NER")
 
 extractor = load_extractor()
 
