@@ -76,36 +76,45 @@ with tab2:
         upload_img = st.file_uploader("1. Upload Cover Image (PNG or JPG)", type=["png", "jpg", "jpeg"])
         secret_data = st.text_area("2. Enter the secret message to hide:")
         
+        if steg_mode == "Encode (Hide Data)":
+        st.subheader("Hide a Message")
+        
+        upload_img = st.file_uploader("1. Upload Cover Image (PNG or JPG)", type=["png", "jpg", "jpeg"])
+        secret_data = st.text_area("2. Enter the secret message to hide:")
+        
+        # Initialize session state to hold our generated image
+        if "encoded_image" not in st.session_state:
+            st.session_state.encoded_image = None
+
         if st.button("Encode & Generate Image", type="primary"):
             if upload_img and secret_data:
                 try:
                     with st.spinner("Encoding message into image..."):
-                        # Open the uploaded image
                         img = Image.open(upload_img)
-                        
-                        # Hide the data using LSB
                         secret_img = lsb.hide(img, secret_data)
                         
-                        # Save the new image to a BytesIO buffer
                         buf = BytesIO()
-                        # CRITICAL: Must be saved as PNG. JPG compression destroys hidden LSB data!
                         secret_img.save(buf, format="PNG")
-                        byte_im = buf.getvalue()
+                        
+                        # Save the bytes to session state instead of just a local variable
+                        st.session_state.encoded_image = buf.getvalue()
                         
                     st.success("Message successfully hidden!")
-                    st.image(secret_img, caption="Encoded Image Preview", use_container_width=True)
-                    
-                    # Provide Download Button
-                    st.download_button(
-                        label="Download Encoded Image",
-                        data=byte_im,
-                        file_name="secret_encoded_image.png",
-                        mime="image/png"
-                    )
                 except Exception as e:
                     st.error(f"An error occurred during encoding: {e}")
             else:
                 st.warning("Please upload an image and enter a message to hide.")
+
+        # Display the image and download button OUTSIDE the st.button block
+        if st.session_state.encoded_image:
+            st.image(st.session_state.encoded_image, caption="Encoded Image Preview", use_container_width=True)
+            
+            st.download_button(
+                label="Download Encoded Image",
+                data=st.session_state.encoded_image,
+                file_name="secret_encoded_image.png",
+                mime="image/png"
+            )
 
     elif steg_mode == "Decode (Reveal Data)":
         st.subheader("Reveal a Message")
