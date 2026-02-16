@@ -25,7 +25,7 @@ st.title("🛡️ Advanced Cybersecurity Toolkit")
 tab1, tab2 = st.tabs(["CTI Extractor", "Image Steganography"])
 
 # ==========================================
-# TAB 1: CTI EXTRACTOR (Your original code)
+# TAB 1: CTI EXTRACTOR
 # ==========================================
 with tab1:
     st.header("Threat Intelligence Extractor")
@@ -71,12 +71,6 @@ with tab2:
     st.divider()
 
     if steg_mode == "Encode (Hide Data)":
-        st.subheader("Hide a Message")
-        
-        upload_img = st.file_uploader("1. Upload Cover Image (PNG or JPG)", type=["png", "jpg", "jpeg"])
-        secret_data = st.text_area("2. Enter the secret message to hide:")
-        
-        if steg_mode == "Encode (Hide Data)":
         st.subheader("Hide a Message")
         
         upload_img = st.file_uploader("1. Upload Cover Image (PNG or JPG)", type=["png", "jpg", "jpeg"])
