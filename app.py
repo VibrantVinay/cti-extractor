@@ -62,7 +62,7 @@ with tab1:
 # TAB 2: STEGANOGRAPHY TOOL
 # ==========================================
 with tab2:
-    st.header("🕵️ Image Steganography (LSB)")
+    st.header("Image Steganography (LSB)")
     st.markdown("Hide confidential text inside an image, or decode an image to reveal hidden data.")
 
     # Sub-tabs or Radio buttons for Encode/Decode
