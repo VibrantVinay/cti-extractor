@@ -76,49 +76,71 @@ with tab2:
         upload_img = st.file_uploader("1. Upload Cover Image (PNG or JPG)", type=["png", "jpg", "jpeg"])
         secret_data = st.text_area("2. Enter the secret message to hide:")
         
-        # 1. Initialize TWO session states to anchor the data and the UI
+        # 1. Initialize State
         if "encoded_image" not in st.session_state:
             st.session_state.encoded_image = None
         if "encode_success" not in st.session_state:
             st.session_state.encode_success = False
+        if "error_msg" not in st.session_state:
+            st.session_state.error_msg = None
 
-        # 2. The Button Logic (Processes data and flips the success flag to True)
-        if st.button("Encode & Generate Image", type="primary"):
-            if upload_img and secret_data:
+        # 2. Callback Function (Runs BEFORE the page reloads)
+        def process_encoding(image_file, text):
+            if image_file and text:
                 try:
-                    with st.spinner("Encoding message into image..."):
-                        img = Image.open(upload_img)
-                        secret_img = lsb.hide(img, secret_data)
-                        
-                        buf = BytesIO()
-                        secret_img.save(buf, format="PNG")
-                        
-                        # Lock the image and success state into memory
-                        st.session_state.encoded_image = buf.getvalue()
-                        st.session_state.encode_success = True
+                    # Open and process
+                    img = Image.open(image_file)
+                    secret_img = lsb.hide(img, text)
+                    
+                    # Save to bytes
+                    buf = BytesIO()
+                    secret_img.save(buf, format="PNG")
+                    
+                    # Store in state
+                    st.session_state.encoded_image = buf.getvalue()
+                    st.session_state.encode_success = True
+                    st.session_state.error_msg = None
                 except Exception as e:
-                    st.error(f"An error occurred during encoding: {e}")
-                    st.session_state.encode_success = False # Reset on failure
+                    st.session_state.encode_success = False
+                    st.session_state.error_msg = f"Encoding Error: {str(e)}"
             else:
-                st.warning("Please upload an image and enter a message to hide.")
+                st.session_state.encode_success = False
+                st.session_state.error_msg = "Please upload an image and enter a message."
 
-        # 3. The Display Logic (Strictly separated from the button's indentation!)
+        # 3. The Button (Triggers the callback)
+        st.button(
+            "Encode & Generate Image", 
+            type="primary", 
+            on_click=process_encoding, 
+            args=(upload_img, secret_data)
+        )
+
+        # 4. Safely Render UI
         if st.session_state.get("encode_success") and st.session_state.get("encoded_image"):
-            # Because this is outside the button block, it will survive page reloads
             st.success("Message successfully hidden!")
-            st.image(st.session_state.encoded_image, caption="Encoded Image Preview", use_container_width=True)
             
-            st.download_button(
-                label="Download Encoded Image",
-                data=st.session_state.encoded_image,
-                file_name="secret_encoded_image.png",
-                mime="image/png"
-            )
+            try:
+                # Re-wrap the bytes into a PIL object so Streamlit doesn't choke on raw bytes
+                preview_img = Image.open(BytesIO(st.session_state.encoded_image))
+                st.image(preview_img, caption="Encoded Image Preview", use_container_width=True)
+                
+                st.download_button(
+                    label="Download Encoded Image",
+                    data=st.session_state.encoded_image,
+                    file_name="secret_encoded_image.png",
+                    mime="image/png",
+                    key="stegano_dl_btn" # Unique key prevents widget refresh bugs
+                )
+            except Exception as e:
+                st.error(f"Frontend Render Error: {e}")
+                
+        elif st.session_state.get("error_msg"):
+            st.error(st.session_state.error_msg)
+            st.session_state.error_msg = None # Clear error after showing
 
     elif steg_mode == "Decode (Reveal Data)":
         st.subheader("Reveal a Message")
         
-        # Note: We only accept PNG here because JPGs would have lost the data
         upload_enc = st.file_uploader("1. Upload Encoded Image (PNG only)", type=["png"])
         
         if st.button("Decode Image", type="primary"):
@@ -126,12 +148,10 @@ with tab2:
                 try:
                     with st.spinner("Analyzing image for hidden data..."):
                         img = Image.open(upload_enc)
-                        # Reveal the hidden message
                         hidden_message = lsb.reveal(img)
                         
                         if hidden_message:
                             st.success("Hidden message found!")
-                            # Using code block to make the extracted text easy to copy
                             st.code(hidden_message, language="text")
                         else:
                             st.warning("No hidden message found in this image.")
