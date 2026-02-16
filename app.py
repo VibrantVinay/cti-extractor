@@ -76,10 +76,13 @@ with tab2:
         upload_img = st.file_uploader("1. Upload Cover Image (PNG or JPG)", type=["png", "jpg", "jpeg"])
         secret_data = st.text_area("2. Enter the secret message to hide:")
         
-        # Initialize session state to hold our generated image
+        # 1. Initialize TWO session states to anchor the data and the UI
         if "encoded_image" not in st.session_state:
             st.session_state.encoded_image = None
+        if "encode_success" not in st.session_state:
+            st.session_state.encode_success = False
 
+        # 2. The Button Logic (Processes data and flips the success flag to True)
         if st.button("Encode & Generate Image", type="primary"):
             if upload_img and secret_data:
                 try:
@@ -90,17 +93,19 @@ with tab2:
                         buf = BytesIO()
                         secret_img.save(buf, format="PNG")
                         
-                        # Save the bytes to session state instead of just a local variable
+                        # Lock the image and success state into memory
                         st.session_state.encoded_image = buf.getvalue()
-                        
-                    st.success("Message successfully hidden!")
+                        st.session_state.encode_success = True
                 except Exception as e:
                     st.error(f"An error occurred during encoding: {e}")
+                    st.session_state.encode_success = False # Reset on failure
             else:
                 st.warning("Please upload an image and enter a message to hide.")
 
-        # Display the image and download button OUTSIDE the st.button block
-        if st.session_state.encoded_image:
+        # 3. The Display Logic (Strictly separated from the button's indentation!)
+        if st.session_state.get("encode_success") and st.session_state.get("encoded_image"):
+            # Because this is outside the button block, it will survive page reloads
+            st.success("Message successfully hidden!")
             st.image(st.session_state.encoded_image, caption="Encoded Image Preview", use_container_width=True)
             
             st.download_button(
