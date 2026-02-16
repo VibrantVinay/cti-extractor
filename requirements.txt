@@ -6,3 +6,4 @@ accelerate==0.27.2
 seqeval==1.2.2
 stegano
 Pillow
+opencv-python-headless
