@@ -507,6 +507,36 @@ h1, h2, h3 {
 }
 h2 { font-size: 1rem !important; }
 h3 { font-size: 0.9rem !important; color: #0088ff !important; }
+
+/* ── MOBILE RESPONSIVENESS (ADDED) ── */
+@media (max-width: 768px) {
+    .block-container {
+        padding: 1rem !important;
+    }
+    .nexus-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .nexus-logo {
+        font-size: 1.4rem;
+    }
+    .nexus-logo span {
+        display: block;
+        margin-top: 5px;
+        font-size: 0.85rem;
+    }
+    .nexus-status {
+        text-align: left;
+    }
+    [data-testid="stMetricValue"] {
+        font-size: 1.6rem !important;
+    }
+    [data-testid="stTabs"] [data-baseweb="tab"] {
+        padding: 0.5rem !important;
+        font-size: 0.6rem !important;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -553,7 +583,8 @@ now = datetime.now()
 st.markdown(f"""
 <div class="nexus-header">
     <div>
-        <div class="nexus-logo">NEXUS<br><span>FORENSIC INTELLIGENCE SUITE v4.2</span></div>
+        <div class="nexus-logo">NEXUS
+<span>FORENSIC INTELLIGENCE SUITE v4.2</span></div>
     </div>
     <div class="nexus-status">
         <div><span class="dot"></span>SYSTEM ONLINE</div>
@@ -596,16 +627,26 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("""
     <div style="font-family:'Share Tech Mono',monospace; font-size:0.62rem; color:#1a3550; line-height:1.8; padding-top:0.5rem;">
-        MODULE INDEX<br>
-        ───────────────<br>
-        [01] DASHBOARD<br>
-        [02] CTI EXTRACTOR<br>
-        [03] STEGANOGRAPHY<br>
-        [04] OSINT ANALYZER<br>
-        [05] MALWARE ANALYSIS<br>
-        [06] HASH IDENTIFIER<br>
-        [07] PASSWORD GEN<br>
-        ───────────────<br>
+        MODULE INDEX
+
+        ───────────────
+
+        [01] DASHBOARD
+
+        [02] CTI EXTRACTOR
+
+        [03] STEGANOGRAPHY
+
+        [04] OSINT ANALYZER
+
+        [05] MALWARE ANALYSIS
+
+        [06] HASH IDENTIFIER
+
+        [07] PASSWORD GEN
+
+        ───────────────
+
         BUILD 20250225-ALPHA
     </div>
     """, unsafe_allow_html=True)
@@ -646,11 +687,16 @@ with tab_dash:
         <div class="panel-box">
             <div style="font-family:'Share Tech Mono',monospace; font-size:0.65rem; color:#4a7090; letter-spacing:0.1em; margin-bottom:0.5rem;">MODULE STATUS</div>
             <div style="font-family:'Share Tech Mono',monospace; font-size:0.75rem; line-height:2; color:#7090a8;">
-                <span style="color:#00ffc8;">●</span> CTI EXTRACTOR &nbsp;&nbsp; READY<br>
-                <span style="color:#00ffc8;">●</span> STEGANOGRAPHY &nbsp; READY<br>
-                <span style="color:#00ffc8;">●</span> OSINT ANALYZER &nbsp; READY<br>
-                <span style="color:#00ffc8;">●</span> MALWARE SCAN &nbsp;&nbsp;&nbsp; READY<br>
-                <span style="color:#00ffc8;">●</span> HASH TOOLS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; READY<br>
+                <span style="color:#00ffc8;">●</span> CTI EXTRACTOR &nbsp;&nbsp; READY
+
+                <span style="color:#00ffc8;">●</span> STEGANOGRAPHY &nbsp; READY
+
+                <span style="color:#00ffc8;">●</span> OSINT ANALYZER &nbsp; READY
+
+                <span style="color:#00ffc8;">●</span> MALWARE SCAN &nbsp;&nbsp;&nbsp; READY
+
+                <span style="color:#00ffc8;">●</span> HASH TOOLS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; READY
+
                 <span style="color:#00ffc8;">●</span> PASSWORD GEN &nbsp;&nbsp;&nbsp; READY
             </div>
         </div>
@@ -668,10 +714,14 @@ with tab_dash:
         <div class="panel-box">
             <div style="font-family:'Share Tech Mono',monospace; font-size:0.65rem; color:#4a7090; letter-spacing:0.1em; margin-bottom:0.5rem;">SESSION INFO</div>
             <div style="font-family:'Share Tech Mono',monospace; font-size:0.72rem; line-height:1.9; color:#7090a8;">
-                DATE &nbsp;&nbsp;&nbsp;&nbsp; {now.strftime("%Y-%m-%d")}<br>
-                TIME &nbsp;&nbsp;&nbsp;&nbsp; {now.strftime("%H:%M:%S")} UTC<br>
-                BUILD &nbsp;&nbsp;&nbsp; v4.2.1-ALPHA<br>
-                ENGINE &nbsp;&nbsp; SecureBERT-NER<br>
+                DATE &nbsp;&nbsp;&nbsp;&nbsp; {now.strftime("%Y-%m-%d")}
+
+                TIME &nbsp;&nbsp;&nbsp;&nbsp; {now.strftime("%H:%M:%S")} UTC
+
+                BUILD &nbsp;&nbsp;&nbsp; v4.2.1-ALPHA
+
+                ENGINE &nbsp;&nbsp; SecureBERT-NER
+
                 MODE &nbsp;&nbsp;&nbsp;&nbsp; FORENSIC
             </div>
         </div>
@@ -979,9 +1029,12 @@ with tab_pass:
 
                     st.markdown(f"""
                     <div style="font-family:'Share Tech Mono',monospace; font-size:0.7rem; color:#2a5070; border-top:1px solid #0a2030; padding-top:0.8rem; margin-top:0.8rem; line-height:1.8;">
-                        NIST COMPLIANCE: SP 800-63B<br>
-                        ENTROPY CLASS: {'HIGH' if entropy >= 80 else 'MEDIUM' if entropy >= 60 else 'LOW'}<br>
-                        CRACK RESISTANCE: {'VERY HIGH' if entropy >= 80 else 'HIGH' if entropy >= 60 else 'MEDIUM' if entropy >= 40 else 'LOW'}<br>
+                        NIST COMPLIANCE: SP 800-63B
+
+                        ENTROPY CLASS: {'HIGH' if entropy >= 80 else 'MEDIUM' if entropy >= 60 else 'LOW'}
+
+                        CRACK RESISTANCE: {'VERY HIGH' if entropy >= 80 else 'HIGH' if entropy >= 60 else 'MEDIUM' if entropy >= 40 else 'LOW'}
+
                         RNG BACKEND: secrets (CSPRNG)
                     </div>
                     """, unsafe_allow_html=True)
