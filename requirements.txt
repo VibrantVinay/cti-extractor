@@ -1,5 +1,9 @@
 opencv-python-headless
 streamlit
 pandas
-numpy
+Pillow
 stegano
+python-whois
+pefile
+transformers
+torch
