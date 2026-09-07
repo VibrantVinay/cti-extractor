@@ -1,7 +1,7 @@
 from transformers import pipeline
 
 class CTIExtractor:
-    def __init__(self, model_path="./saved_cti_model"):
+    def __init__(self, model_path="cisco-ai/SecureBERT2.0-NER"):
         """
         Initializes the NER pipeline. 
         If you haven't run train.py yet, you can test this by changing model_path to:
